@@ -62,6 +62,27 @@ $('#editUserBtn').on('click', function(e) {
     var userEmail = $('#userEmail').val();
     var userFirstName = $('#givenName').val();
     var userLastName = $('#familyName').val();
+    var editUrl = '/HolidayExtrasAPI/myRestAPI/users/' + userID;
+
+    var newUser = {
+        userEmail: userEmail,
+        userGivenName: userFirstName,
+        userFamilyName: userLastName
+    };
+
+    $.ajax({
+        method: 'POST',
+        url: editUrl,
+        dataType: 'json',
+        data: JSON.stringify(newUser),
+        contentType: "application/json; charset=utf-8",
+        success: function (response) {
+            alert(response.Status);
+        },
+        error: function (response) {
+            alert(response);
+        }
+    });
 
     resetUserForm();
 });
@@ -73,7 +94,6 @@ $('#resetUserBtn').on('click', function() {
 $('#searchForUser').on('click', function() {
     var searchStr = $('#searchUser').val().toLowerCase();
     var searchUrl = '/HolidayExtrasAPI/myRestAPI/users/' + searchStr;
-    var foundUsers = [];
 
     if (searchStr.length > 0) {
         $.ajax({
@@ -92,6 +112,7 @@ $('#searchForUser').on('click', function() {
 $('table').on('click', 'tr button.delete-button', function() {
     var userID = $(this).closest('tr').find('.table-row-id').text();
     var deleteUrl = '/HolidayExtrasAPI/myRestAPI/users/' + userID;
+    $(this).closest('tr').remove();
 
     $.ajax({
         method: 'DELETE',
@@ -103,8 +124,6 @@ $('table').on('click', 'tr button.delete-button', function() {
             alert(response);
         }
     });
-
-    $(this).closest('tr').remove();
 });
 
 $('table').on('click', 'tr button.edit-button', function() {

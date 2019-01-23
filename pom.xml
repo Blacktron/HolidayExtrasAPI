@@ -55,7 +55,7 @@
     </dependencies>
 
     <build>
-        <finalName>HERestAPI</finalName>
+        <finalName>HolidayExtrasAPI</finalName>
     </build>
 
     <properties>

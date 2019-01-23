@@ -43,37 +43,27 @@ public class UserService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createUser(InputStream incomingData) {
         System.out.println("POST /users add");
-        StringBuilder userDetailsStr = new StringBuilder();
+        JsonNode userDetails = convertInputDataToJSON(incomingData);
+        boolean doesUserExist = checkIfUserExists(userDetails);
 
-        try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(incomingData));
-            String line;
-            while ((line = in.readLine()) != null) {
-                userDetailsStr.append(line);
+        if (!doesUserExist) {
+            User newUser = null;
+            if (userDetails != null) {
+                newUser = new User(userDetails);
+            } else {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"Error\" : \"Unable to convert data to JSON\"}").build();
             }
-        } catch (Exception e) {
-            System.out.println("Error Parsing: -");
+
+            try {
+                users.add(newUser);
+            } catch (Exception ex) {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"Error\" : \"Unable to add User to the list!\"}").build();
+            }
+        } else {
+            String userID = userDetails.get("userID").textValue();
+            return Response.ok("{\"Status\" : \"User with ID " + userID + " already exists!\"}").build();
         }
 
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode userDetails = null;
-
-        try {
-            userDetails = mapper.readTree(userDetailsStr.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        User newUser = null;
-        if (userDetails != null) {
-            newUser = new User(userDetails);
-        }
-
-        try {
-            users.add(newUser);
-        } catch (Exception ex) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"Error\" : \"Unable to add User to the list!\"}").build();
-        }
 
         return Response.ok("{\"Status\" : \"New User successfully created!\"}").build();
     }
@@ -107,15 +97,18 @@ public class UserService {
     @POST
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response editCandidate(@PathParam("id") String userID, JsonNode userDetails) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response editCandidate(@PathParam("id") String userID, InputStream incomingData) {
         System.out.println("POST /users edit");
+        JsonNode userDetails = convertInputDataToJSON(incomingData);
 
         for (User user : users) {
             if (user.getID().equals(userID)) {
-                user.setEmail(userDetails.get("userEmail").textValue());
-                user.setGivenName(userDetails.get("userGivenName").textValue());
-                user.setFamilyName(userDetails.get("userFamilyName").textValue());
-                break;
+                if (userDetails != null) {
+                    user.setEmail(userDetails.get("userEmail").textValue());
+                    user.setGivenName(userDetails.get("userGivenName").textValue());
+                    user.setFamilyName(userDetails.get("userFamilyName").textValue());
+                }
             }
         }
 
@@ -142,5 +135,44 @@ public class UserService {
         }
 
         return Response.ok(foundUsers).build();
+    }
+
+    private JsonNode convertInputDataToJSON(InputStream incomingData) {
+        StringBuilder userDetailsStr = new StringBuilder();
+        JsonNode jsonNode = null;
+
+        try {
+            BufferedReader in = new BufferedReader(new InputStreamReader(incomingData));
+            String line;
+            while ((line = in.readLine()) != null) {
+                userDetailsStr.append(line);
+            }
+        } catch (Exception e) {
+            System.out.println("Error Parsing: -");
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            jsonNode = mapper.readTree(userDetailsStr.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return jsonNode;
+    }
+
+    private boolean checkIfUserExists(JsonNode userDetails) {
+        boolean check = false;
+        String newUserID = userDetails.get("userID").textValue();
+
+        for (User user : users) {
+            if (user.getID().equals(newUserID)) {
+                check = true;
+                break;
+            }
+        }
+
+        return check;
     }
 }
