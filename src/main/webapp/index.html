@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HolidayExtras API</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+</head>
+<body>
+<div class="container-fluid">
+    <div class="create-user">
+        <form id="addUser" method="post">
+            <div class="form-group">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" name="userID" id="userID" placeholder="User ID" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <input type="email" class="form-control" name="userEmail" id="userEmail" placeholder="Email" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" name="givenName" id="givenName" placeholder="Given name" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" name="familyName" id="familyName" placeholder="Family name" required>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-success" type="submit" id="addUserBtn">Add User</button>
+            <button class="btn btn-success" type="button" id="editUserBtn">Save Changes</button>
+            <button class="btn btn-danger" type="button" id="resetUserBtn">Cancel Edit</button>
+        </form>
+    </div>
+
+    <br><br>
+
+    <div class="search-users">
+        <div class="form-group">
+            <div class="col-sm-3">
+                <input type="text" class="form-control" name="searchUser" id="searchUser" placeholder="Type name to search">
+            </div>
+        </div>
+        <button class="btn btn-success" type="button" id="searchForUser">Search</button>
+    </div>
+
+    <br><br>
+
+    <div class="table-responsive display-all-users">
+        <button class="btn btn-success" type="button" id="showAllUsers">Show All</button>
+        <div id="allUsers" style="display: none">
+            <table class="table table-hover" id="allUsersData" style="width:100%">
+                <tr>
+                    <th>ID</th>
+                    <th>Email</th>
+                    <th>Given Name</th>
+                    <th>Family Name</th>
+                    <th>Date Created</th>
+                    <th>Options</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+<script src="main.js"></script>
+</body>
+</html>
